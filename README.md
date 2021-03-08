@@ -6,7 +6,7 @@
 [![](https://img.shields.io/docker/image-size/andre74/smb1-proxy)](https://hub.docker.com/r/andre74/smb1-proxy)
 [![](https://img.shields.io/docker/cloud/build/andre74/smb1-proxy)](https://hub.docker.com/r/andre74/smb1-proxy/builds)
 
-This container is used to proxy an existing secure smb share (version 2+) to allow legacy scanning devices, that only support cifs/smb v1 the access to a specific share or folder on the secure share - without downgrading the complete server to smb v1. Its designed to forward all files to the secure share, without overwriting files on the destination
+This container is used to proxy an existing secure smb share (version 2+) to allow legacy devices, that only support cifs/smb v1 the access to a specific share or folder on the secure share - without downgrading the complete server to smb v1. Its designed to forward all files to the secure share, without overwriting files on the destination
 
 * GitHub: [Andreetje/smb1-proxy](https://github.com/Andreetje/smb1-proxy)
 * Docker Hub: [andre74/smb1-proxy](https://hub.docker.com/repository/docker/andre74/smb1-proxy)
@@ -27,6 +27,7 @@ services:
       GROUPID: 1000
       SAMBA_USERNAME: scanuser
       SAMBA_PASSWORD: secret1
+      GLOBAL: ntlm auth = yes
       PROXY1_ENABLE: 1
       PROXY1_SHARE_NAME: scanshare10
       PROXY1_REMOTE_PATH: //secure-host/share/path/to/folder
@@ -58,6 +59,7 @@ The configuration is done via environment variables:
 - `GROUPID`: Linux Group ID
 - `SAMBA_USERNAME`: Global Username for the created shares
 - `SAMBA_PASSWORD`: Global Password for the created shares
+- `GLOBAL`: ntlm auth = yes ; Windows XP legacy support
 - `PROXYx_ENABLE`: 0 = disabled, 1 = enabled
 - `PROXYx_SHARE_NAME`: Samba Share name
 - `PROXYx_REMOTE_PATH`: Can be just a share (//host/share) or a complete path (//host/share/path/to/folder)
