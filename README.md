@@ -1,4 +1,4 @@
-# Scan-to-SMB1 #
+# smb1-proxy #
 
 [![](https://img.shields.io/docker/v/jandi/scan-to-smb1?sort=semver)](https://hub.docker.com/r/jandi/scan-to-smb1/tags)
 [![](https://img.shields.io/docker/pulls/jandi/scan-to-smb1)](https://hub.docker.com/r/jandi/scan-to-smb1)
