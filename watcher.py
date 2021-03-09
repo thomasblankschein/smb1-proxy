@@ -20,11 +20,11 @@ while True:
     #files = glob.glob(shareDirectory + '/*.pdf')
     files = glob.glob(shareDirectory + '/*.*')
     for file in files:
-      currentTime = time.time()
-      modifiedTime = os.path.getmtime(file)
-      fileAge = currentTime - modifiedTime
-      if fileAge < 15:
-        continue
+#      currentTime = time.time()
+#      modifiedTime = os.path.getmtime(file)
+#      fileAge = currentTime - modifiedTime
+#      if fileAge < 15:
+#        continue
 
       _, filename = os.path.split(file)
       name, ext = os.path.splitext(filename) 
