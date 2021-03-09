@@ -44,4 +44,4 @@ while True:
       except (FileNotFoundError, OSError) as err:
         print("↳ " + str(err))
       
-  time.sleep(5)
+  time.sleep(15)
