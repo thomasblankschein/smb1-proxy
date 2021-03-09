@@ -34,8 +34,8 @@ while True:
         i = i + 1
 #        remotePath = remoteMount + "/" + name + '{:04d}'.format(i) + ext
         remotePath = remoteMount + "/" + name + ext
-        if not os.path.exists(remotePath):
-          break
+#        if not os.path.exists(remotePath):
+#          break
       
       try:
         print("Move File: '" + file + "' -> '" + remotePath + "'")
