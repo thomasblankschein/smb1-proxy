@@ -17,7 +17,6 @@ while True:
     shareDirectory = '/share{}'.format(i)
     remoteMount = '/remote{}'.format(i)
 
-    #files = glob.glob(shareDirectory + '/*.pdf')
     files = glob.glob(shareDirectory + '/*.*')
     for file in files:
 #      currentTime = time.time()
@@ -32,13 +31,12 @@ while True:
       i = 0
       while True:
         i = i + 1
-#        remotePath = remoteMount + "/" + name + '{:04d}'.format(i) + ext
         remotePath = remoteMount + "/" + name + ext
-#        if not os.path.exists(remotePath):
-#          break
+        if not os.path.exists(remotePath):
+          break
       
       try:
-        print("Move File: '" + file + "' -> '" + remotePath + "'")
+        print("Move Scan: '" + file + "' -> '" + remotePath + "'")
         shutil.copyfile(file, remotePath)
         os.remove(file)
       except (FileNotFoundError, OSError) as err:
