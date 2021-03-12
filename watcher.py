@@ -24,7 +24,7 @@ while True:
       remotePath = remoteMount + "/" + name + ext
       
       try:
-        print("Move Scan: '" + file + "' -> '" + remotePath + "'")
+        print("Move File: '" + file + "' -> '" + remotePath + "'")
         shutil.copyfile(file, remotePath)
         os.remove(file)
       except (FileNotFoundError, OSError) as err:
