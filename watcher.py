@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import glob, os, shutil, time
+import glob, os, shutil, time, datetime
 
 print('File watcher started')
 
@@ -24,7 +24,7 @@ while True:
       remotePath = remoteMount + "/" + name + ext
       
       try:
-        print("Move File: '" + file + "' -> '" + remotePath + "'")
+        print(datetime.now + " - Move File: '" + file + "' -> '" + remotePath + "'")
         shutil.copyfile(file, remotePath)
         os.remove(file)
       except (FileNotFoundError, OSError) as err:
