@@ -21,13 +21,7 @@ while True:
     for file in files:
       _, filename = os.path.split(file)
       name, ext = os.path.splitext(filename) 
-
-      i = 0
-      while True:
-        i = i + 1
-        remotePath = remoteMount + "/" + name + ext
-        if not os.path.exists(remotePath):
-          break
+      remotePath = remoteMount + "/" + name + ext
       
       try:
         print("Move Scan: '" + file + "' -> '" + remotePath + "'")
@@ -35,5 +29,4 @@ while True:
         os.remove(file)
       except (FileNotFoundError, OSError) as err:
         print("↳ " + str(err))
-      
   time.sleep(15)
