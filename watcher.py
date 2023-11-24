@@ -20,13 +20,13 @@ while True:
     files = glob.glob(shareDirectory + '/*.*')
     for file in files:      
       _, filename = os.path.split(file)
+      now = datetime.datetime.now()
       
       if time.time() - os.path.getmtime(file) < 30:
         print(now," - Waiting for changes in File: '" + filename + "'")
         continue
         
       name, ext = os.path.splitext(filename) 
-      now = datetime.datetime.now()
       current_time = now.strftime("%Y%m%d %H%M%S")
       remotePath = remoteMount + "/" + current_time + ext
       
