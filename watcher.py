@@ -21,10 +21,12 @@ while True:
     for file in files:
       _, filename = os.path.split(file)
       name, ext = os.path.splitext(filename) 
-      remotePath = remoteMount + "/" + name + ext
+      now = datetime.datetime.now()
+      current_time = now.strftime("%Y%m%d %H%M%S")
+      remotePath = remoteMount + "/" + current_time + ext
       
       try:
-        print(datetime.datetime.now()," - Move File: '" + file + "' -> '" + remotePath + "'")
+        print(now," - Move File: '" + file + "' -> '" + remotePath + "'")
         shutil.copyfile(file, remotePath)
         os.remove(file)
       except (FileNotFoundError, OSError) as err:
