@@ -18,8 +18,13 @@ while True:
     remoteMount = '/remote{}'.format(i)
 
     files = glob.glob(shareDirectory + '/*.*')
-    for file in files:
+    for file in files:      
       _, filename = os.path.split(file)
+      
+      if time.time() - os.path.getmtime(path) < 30:
+        print(now," - Waiting for changes in File: '" + file)
+        continue
+        
       name, ext = os.path.splitext(filename) 
       now = datetime.datetime.now()
       current_time = now.strftime("%Y%m%d %H%M%S")
