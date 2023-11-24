@@ -21,8 +21,8 @@ while True:
     for file in files:      
       _, filename = os.path.split(file)
       
-      if time.time() - os.path.getmtime(path) < 30:
-        print(now," - Waiting for changes in File: '" + file)
+      if time.time() - os.path.getmtime(file) < 30:
+        print(now," - Waiting for changes in File: '" + filename)
         continue
         
       name, ext = os.path.splitext(filename) 
