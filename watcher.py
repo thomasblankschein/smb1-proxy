@@ -22,7 +22,7 @@ while True:
       _, filename = os.path.split(file)
       
       if time.time() - os.path.getmtime(file) < 30:
-        print(now," - Waiting for changes in File: '" + filename)
+        print(now," - Waiting for changes in File: '" + filename + "'")
         continue
         
       name, ext = os.path.splitext(filename) 
@@ -36,4 +36,4 @@ while True:
         os.remove(file)
       except (FileNotFoundError, OSError) as err:
         print("↳ " + str(err))
-  time.sleep(15)
+  time.sleep(20)
