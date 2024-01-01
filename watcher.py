@@ -22,7 +22,7 @@ while True:
       _, filename = os.path.split(file)
       now = datetime.datetime.now()
       
-      if time.time() - os.path.getmtime(file) < 30:
+      if time.time() - os.path.getmtime(file) < 60:
         print(now," - Waiting for changes in File: '" + filename + "'")
         continue
         
