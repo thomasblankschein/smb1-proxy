@@ -22,12 +22,13 @@ while True:
       _, filename = os.path.split(file)
       now = datetime.datetime.now()
       
-      if time.time() - os.path.getmtime(file) < 60:
+      mtime = os.path.getmtime(file)
+      if time.time() - mtime < 30:
         print(now," - Waiting for changes in File: '" + filename + "'")
         continue
         
       name, ext = os.path.splitext(filename) 
-      current_time = now.strftime("%Y%m%d_%H%M%S")
+      mtime_str = datetime.datetime.fromtimestamp(mtime).strftime("%Y%m%d_%H%M%S")
       remotePath = remoteMount + "/" + current_time + ext
       
       try:
@@ -36,4 +37,4 @@ while True:
         os.remove(file)
       except (FileNotFoundError, OSError) as err:
         print("↳ " + str(err))
-  time.sleep(20)
+  time.sleep(10)
