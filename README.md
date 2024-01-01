@@ -1,15 +1,10 @@
+Slightly changed fork of https://github.com/emtek-at/smb1-proxy:
+* Waiting 60s after last file modify before moving to target (so you have more time to scan the next page of a document)
+* File name with underscore (no blank)
+
 # smb1-proxy #
 
-[![](https://img.shields.io/docker/v/andre74/smb1-proxy?sort=semver)](https://hub.docker.com/r/andre74/smb1-proxy/tags)
-[![](https://img.shields.io/docker/pulls/andre74/smb1-proxy)](https://hub.docker.com/r/andre74/smb1-proxy)
-[![](https://img.shields.io/docker/stars/andre74/smb1-proxy)](https://hub.docker.com/r/andre74/smb1-proxy)
-[![](https://img.shields.io/docker/image-size/andre74/smb1-proxy)](https://hub.docker.com/r/andre74/smb1-proxy)
-[![](https://img.shields.io/docker/cloud/build/andre74/smb1-proxy)](https://hub.docker.com/r/andre74/smb1-proxy/builds)
-
 This container is used to proxy an existing secure smb share (version 2+) to allow legacy devices, that only support cifs/smb v1 the access to a specific share or folder on the secure share - without downgrading the complete server to smb v1. Its designed to forward all files to the secure share, without overwriting files on the destination
-
-* GitHub: [Andreetje/smb1-proxy](https://github.com/Andreetje/smb1-proxy)
-* Docker Hub: [andre74/smb1-proxy](https://hub.docker.com/repository/docker/andre74/smb1-proxy)
 
 ## Usage ##
 
