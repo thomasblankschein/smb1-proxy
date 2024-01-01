@@ -27,7 +27,7 @@ while True:
         continue
         
       name, ext = os.path.splitext(filename) 
-      current_time = now.strftime("%Y%m%d %H%M%S")
+      current_time = now.strftime("%Y%m%d_%H%M%S")
       remotePath = remoteMount + "/" + current_time + ext
       
       try:
