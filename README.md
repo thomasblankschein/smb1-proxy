@@ -15,7 +15,7 @@ version: '3.7'
 
 services:
   smb1proxy:
-    image: andre74/smb1-proxy
+    image: smb1-proxy
     environment:
       TZ: 'Europe/Berlin'
       USERID: 1000
