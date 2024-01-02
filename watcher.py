@@ -29,7 +29,7 @@ while True:
         
       name, ext = os.path.splitext(filename) 
       mtime_str = datetime.datetime.fromtimestamp(mtime).strftime("%Y%m%d_%H%M%S")
-      remotePath = remoteMount + "/" + current_time + ext
+      remotePath = remoteMount + "/" + mtime_str + ext
       
       try:
         print(now," - Move File: '" + file + "' -> '" + remotePath + "'")
