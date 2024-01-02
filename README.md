@@ -1,5 +1,5 @@
 Slightly changed fork of https://github.com/emtek-at/smb1-proxy:
-* Waiting 60s after last file modify before moving to target (so you have more time to scan the next page of a document)
+* Faster check interval for new files
 * File name with underscore (no blank)
 
 # smb1-proxy #
