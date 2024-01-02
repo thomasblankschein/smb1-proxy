@@ -1,6 +1,7 @@
 Slightly changed fork of https://github.com/emtek-at/smb1-proxy:
-* Faster check interval for new files
+* Faster check interval (10s)
 * File name with underscore (no blank)
+* File name based on last modified date of the file
 
 # smb1-proxy #
 
