@@ -1,4 +1,4 @@
-Slightly changed fork of https://github.com/emtek-at/smb1-proxy:
+Slightly changed fork 
 * Faster check interval (10s)
 * File name with underscore (no blank)
 * File name based on last modified date of the file
