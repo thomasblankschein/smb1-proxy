@@ -23,10 +23,10 @@ Die Reihenfolge ist so gewählt, dass jederzeit ein Rückweg auf das alte Verhal
 
 ## 1. Zugangsdaten anlegen
 
-Einen gemeinsamen API-Key erzeugen, mit dem der Proxy den OCR-Service anspricht:
+Einen gemeinsamen API-Key erzeugen, mit dem der Proxy den OCR-Service anspricht. Der Befehl braucht kein `openssl` und läuft auch auf einer schlanken Alpine-VM (BusyBox):
 
 ```bash
-openssl rand -hex 24
+cat /proc/sys/kernel/random/uuid /proc/sys/kernel/random/uuid | tr -d '\n-'
 ```
 
 Neben der Compose-Datei zwei Dateien anlegen, beide mit `chmod 600` und **nicht** einchecken.
