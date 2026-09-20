@@ -4,8 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.5.0] - 2026-09-20
 ### Added
+- `DEPLOYMENT.md`: step-by-step guide (German) for running the proxy with the OCR chain on a VM
 - Optional OCR pipeline (`OCR_URL`): PDFs are processed by the pdf-adobe-ocr service and filed as
   `<correspondent>/<date>_<content>.pdf`; fallbacks `_Unbekannt`, `_Pruefen` and `<timestamp>_Fehler.pdf`
 - Files in the target are never overwritten in this mode (collisions get `_2`, `_3`, ...); results are written atomically
