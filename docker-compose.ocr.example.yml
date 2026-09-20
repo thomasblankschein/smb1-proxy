@@ -1,0 +1,56 @@
+# Beispiel: smb1-proxy zusammen mit dem pdf-adobe-ocr-Service auf derselben VM.
+#   Scanner --SMB1--> smb1proxy --HTTP--> pdf-adobe-ocr (Adobe OCR + LLM)
+#                        \--SMB2--> Zielverzeichnis  (Korrespondent/Datum_Inhalt.pdf)
+#
+# Vorbereiten: .env.ocr anlegen (siehe unten), OCR_API_KEY in der Shell oder in einer .env neben dieser Datei setzen.
+#   docker compose -f docker-compose.ocr.example.yml up -d --build
+services:
+  smb1proxy:
+    build: .
+    depends_on:
+      - pdf-adobe-ocr
+    environment:
+      TZ: 'Europe/Berlin'
+      USERID: 1000
+      GROUPID: 1000
+      SAMBA_USERNAME: scanuser
+      SAMBA_PASSWORD: secret1
+      GLOBAL: ntlm auth = yes
+      PROXY1_ENABLE: 1
+      PROXY1_SHARE_NAME: scanshare10
+      PROXY1_REMOTE_PATH: //secure-host/share/path/to/folder
+      PROXY1_REMOTE_DOMAIN: DOM
+      PROXY1_REMOTE_USERNAME: UserA
+      PROXY1_REMOTE_PASSWORD: password
+      # OCR-Kette einschalten (leer lassen = Verhalten wie bisher, nur Umbenennen)
+      OCR_URL: http://pdf-adobe-ocr:3000
+      OCR_API_KEY: ${OCR_API_KEY}
+      # optional: OCR_LANG=de-DE, OCR_TIMEOUT=900, OCR_RETRIES=5, RETRY_DELAY=60, OCR_WORKERS=2
+    ports:
+      - "445:445/tcp"
+    tmpfs:
+      - /tmp
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    privileged: true
+
+  pdf-adobe-ocr:
+    # Bis zu einem veröffentlichten Release: Branch/Tag anpassen, z. B. #v2.1.0
+    build: https://github.com/thomasblankschein/pdf-adobe-ocr.git#main
+    env_file: .env.ocr
+    environment:
+      PORT: "3000"
+      API_KEY: ${OCR_API_KEY}
+      TZ: 'Europe/Berlin'
+    restart: unless-stopped
+    # Keine "ports": der Service ist nur für den Proxy im Compose-Netz erreichbar.
+
+# .env.ocr (Beispiel, nicht einchecken):
+#   PDF_SERVICES_CLIENT_ID=...
+#   PDF_SERVICES_CLIENT_SECRET=...
+#   LLM_PROVIDER=anthropic
+#   LLM_MODEL=claude-sonnet-5
+#   ANTHROPIC_API_KEY=...
+#   OWN_NAMES=Max Muster; Musterweg 1, 12345 Musterstadt
+#   LOG_LEVEL=info
