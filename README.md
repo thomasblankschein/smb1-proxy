@@ -70,7 +70,7 @@ You can substitute x with an incremented number starting at 1 to create multiple
 With `OCR_URL` set, PDFs are no longer just renamed: the watcher sends each finished PDF to the
 [pdf-adobe-ocr](https://github.com/thomasblankschein/pdf-adobe-ocr) service (`POST /api/ocr` with `llm=true`, `meta=true`,
 `lenient=true`), and stores the result in the target share. Without `OCR_URL` nothing changes.
-A complete example with both services is in `docker-compose.ocr.example.yml`.
+A complete example with both services is in `docker-compose.ocr.example.yml`; a step-by-step guide for the target VM (in German) is in [DEPLOYMENT.md](DEPLOYMENT.md).
 
 Where a file ends up in the target (one folder level, files are never overwritten - collisions get `_2`, `_3`, ...):
 
