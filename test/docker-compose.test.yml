@@ -1,0 +1,60 @@
+# Integrationstest: SMB1-Client -> smb1-proxy -> Stub-OCR -> SMB2-Ziel (kein Adobe, kein LLM, keine Kosten).
+# Ausführen mit: bash test/run.sh
+services:
+  target:
+    image: dperson/samba:amd64
+    environment:
+      USER: "target;targetpw"
+      SHARE: "target;/target;yes;no;no;target"
+      PERMISSIONS: "x"
+      USERID: "1000"
+      GROUPID: "1000"
+    tmpfs:
+      - /target
+
+  ocrstub:
+    image: python:3.12-alpine
+    command: ["python", "-u", "/stub_ocr.py"]
+    volumes:
+      - ./stub_ocr.py:/stub_ocr.py:ro
+
+  smb1proxy:
+    build: ..
+    # Der Proxy mountet das Ziel beim Start und beendet sich, wenn es noch nicht bereit ist
+    depends_on:
+      target:
+        condition: service_healthy
+      ocrstub:
+        condition: service_started
+    environment:
+      TZ: Europe/Berlin
+      USERID: "1000"
+      GROUPID: "1000"
+      SAMBA_USERNAME: scanuser
+      SAMBA_PASSWORD: secret1
+      GLOBAL: ntlm auth = yes
+      PROXY1_ENABLE: "1"
+      PROXY1_SHARE_NAME: scanshare
+      PROXY1_REMOTE_PATH: //target/target
+      PROXY1_REMOTE_DOMAIN: WORKGROUP
+      PROXY1_REMOTE_USERNAME: target
+      PROXY1_REMOTE_PASSWORD: targetpw
+      OCR_URL: http://ocrstub:8080
+      OCR_API_KEY: testkey
+      OCR_RETRIES: "2"
+      DELIVERY_RETRIES: "2"
+      RETRY_DELAY: "1"
+      POLL_INTERVAL: "1"
+      SETTLE_SECONDS: "2"
+      OCR_WORKERS: "2"
+    tmpfs:
+      - /tmp
+    privileged: true
+
+  client:
+    profiles: ["tools"]
+    build:
+      dockerfile_inline: |
+        FROM alpine
+        RUN apk add --no-cache samba-client
+    entrypoint: ["sh"]

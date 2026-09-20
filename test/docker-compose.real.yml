@@ -1,0 +1,61 @@
+# Test der Kette gegen einen ECHTEN, bereits laufenden pdf-adobe-ocr-Service (Adobe + LLM -> kostet Geld!).
+# Das SMB2-Ziel ist ein temporärer Samba-Container, ein echtes NAS wird nicht berührt.
+#
+#   OCR_API_KEY=<key des Service> docker compose -p realtest -f test/docker-compose.real.yml up -d --build
+#
+# Der OCR-Service muss im Docker-Netz "pdf-adobe-ocr_default" unter dem Namen "pdf-adobe-ocr" erreichbar sein
+# (so heißt es, wenn er aus dem Ordner pdf-adobe-ocr per docker compose gestartet wurde).
+services:
+  target:
+    image: dperson/samba:amd64
+    environment:
+      USER: "target;targetpw"
+      SHARE: "target;/target;yes;no;no;target"
+      PERMISSIONS: "x"
+      USERID: "1000"
+      GROUPID: "1000"
+    tmpfs:
+      - /target
+
+  smb1proxy:
+    build: ..
+    depends_on:
+      target:
+        condition: service_healthy
+    networks: [default, ocr]
+    environment:
+      TZ: Europe/Berlin
+      USERID: "1000"
+      GROUPID: "1000"
+      SAMBA_USERNAME: scanuser
+      SAMBA_PASSWORD: secret1
+      GLOBAL: ntlm auth = yes
+      PROXY1_ENABLE: "1"
+      PROXY1_SHARE_NAME: scanshare
+      PROXY1_REMOTE_PATH: //target/target
+      PROXY1_REMOTE_DOMAIN: WORKGROUP
+      PROXY1_REMOTE_USERNAME: target
+      PROXY1_REMOTE_PASSWORD: targetpw
+      OCR_URL: http://pdf-adobe-ocr:3000
+      OCR_API_KEY: ${OCR_API_KEY:?OCR_API_KEY setzen}
+      OCR_RETRIES: "3"
+      RETRY_DELAY: "5"
+      POLL_INTERVAL: "2"
+      SETTLE_SECONDS: "5"
+      OCR_WORKERS: "2"
+    tmpfs:
+      - /tmp
+    privileged: true
+
+  client:
+    profiles: ["tools"]
+    build:
+      dockerfile_inline: |
+        FROM alpine
+        RUN apk add --no-cache samba-client
+    entrypoint: ["sh"]
+
+networks:
+  ocr:
+    external: true
+    name: pdf-adobe-ocr_default
