@@ -36,8 +36,8 @@ services:
     privileged: true
 
   pdf-adobe-ocr:
-    # Bis zu einem veröffentlichten Release: Branch/Tag anpassen, z. B. #v2.1.0
-    build: https://github.com/thomasblankschein/pdf-adobe-ocr.git#main
+    # Fester Release-Tag; für den aktuellen Stand #main verwenden
+    build: https://github.com/thomasblankschein/pdf-adobe-ocr.git#v2.1.0
     env_file: .env.ocr
     environment:
       PORT: "3000"
