@@ -5,7 +5,7 @@
 Ohne OCR_URL (Standard) wie bisher: Datei wird als <Änderungszeit>.<Endung> abgelegt.
 
 Mit OCR_URL werden PDFs zuerst an den pdf-adobe-ocr-Service geschickt (OCR, Textkorrektur, Datum/Korrespondent/
-Kurzinhalt). Abgelegt wird das Ergebnis unter <Korrespondent>/<Datum>_<Kurzinhalt>.pdf. Es geht nie ein Scan
+Kurzinhalt). Abgelegt wird das Ergebnis unter <Korrespondent>/<Datum>_<Korrespondent>_<Kurzinhalt>.pdf. Es geht nie ein Scan
 verloren:
   - Metadaten fehlen             -> _Unbekannt/<Zeitstempel>.pdf (mit OCR)
   - OCR endgültig fehlgeschlagen -> <Zeitstempel>_Fehler.pdf im Zielordner (Original, ohne OCR)

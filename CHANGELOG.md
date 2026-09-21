@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.3] - 2026-09-21
+### Changed
+- Documentation follows the OCR service's new file name pattern `<correspondent>/<date>_<correspondent>_<content>.pdf` (service v2.3.0); the proxy itself takes the path from the service unchanged
+
 ## [0.5.2] - 2026-09-21
 ### Added
 - The OCR service's LLM result (model, pages, corrections, failed/transcribed pages) is written to the log for every file
