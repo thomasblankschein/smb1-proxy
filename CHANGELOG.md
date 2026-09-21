@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.5.1] - 2026-09-21
 ### Added
 - `OCR_TYPE` (`exact` default, or `deskew`): chooses how the OCR service treats the scanned image; `deskew` straightens pages that were fed in crooked. The value is sent to the service as field `type` and shown in the start-up log line
 
