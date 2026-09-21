@@ -123,6 +123,10 @@ def call_ocr(data, filename, scan_date):
     with urllib.request.urlopen(request, timeout=OCR_TIMEOUT) as response:
       pdf = response.read()
       meta_header = response.headers.get('X-OCR-Meta')
+      llm_info = ', '.join('{}={}'.format(key, value) for key, value in (
+        (name, response.headers.get('X-OCR-LLM' + suffix)) for name, suffix in (
+          ('Modell', ''), ('Seiten', '-Pages'), ('Korrekturen', '-Corrections'), ('fehlgeschlagen', '-Failed'),
+          ('transkribiert', '-Transcribed'), ('uebersprungen', '-Skipped'))) if isinstance(value, str) and value)
   except urllib.error.HTTPError as err:
     detail = err.read(300).decode('utf-8', 'replace')
     # 4xx (außer Zeitüberschreitung/Ratenlimit) sind endgültig: Wiederholen ändert nichts
@@ -131,6 +135,7 @@ def call_ocr(data, filename, scan_date):
     raise OcrError("nicht erreichbar/Zeitüberschreitung: {}".format(err), True)
   if not pdf.startswith(b'%PDF'):
     raise OcrError("Antwort ist keine PDF", True)
+  log("OCR-Antwort für {}: LLM {}".format(filename, llm_info or 'nicht angewendet'))
   meta = None
   if meta_header:
     try:
