@@ -41,6 +41,7 @@ services:
       PROXY1_REMOTE_PASSWORD: targetpw
       OCR_URL: http://ocrstub:8080
       OCR_API_KEY: testkey
+      OCR_TYPE: deskew
       OCR_RETRIES: "2"
       DELIVERY_RETRIES: "2"
       RETRY_DELAY: "1"

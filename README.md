@@ -93,6 +93,7 @@ Additional environment variables (all optional):
 - `OCR_URL`: Base URL of the OCR service, e.g. `http://pdf-adobe-ocr:3000`. Empty = OCR pipeline off
 - `OCR_API_KEY`: API key of the service (`X-API-Key`)
 - `OCR_LANG`: OCR language, default `de-DE`
+- `OCR_TYPE`: `exact` (default) keeps the scanned image unchanged and only adds the text layer; `deskew` also straightens pages that were fed in crooked (the image is modified). An invalid value falls back to `exact` with a message in the log
 - `OCR_TIMEOUT`: Seconds per request, default `900` (runs with an LLM take minutes)
 - `OCR_RETRIES`: Attempts per file, default `5`; `RETRY_DELAY`: seconds between attempts, default `60` (so an OCR service that is restarted or updated within about 4 minutes is bridged)
 - `OCR_WORKERS`: Files processed in parallel, default `2`

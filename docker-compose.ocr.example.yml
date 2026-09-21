@@ -25,7 +25,8 @@ services:
       # OCR-Kette einschalten (leer lassen = Verhalten wie bisher, nur Umbenennen)
       OCR_URL: http://pdf-adobe-ocr:3000
       OCR_API_KEY: ${OCR_API_KEY}
-      # optional: OCR_LANG=de-DE, OCR_TIMEOUT=900, OCR_RETRIES=5, RETRY_DELAY=60, OCR_WORKERS=2
+      # optional: OCR_LANG=de-DE, OCR_TYPE=exact (oder deskew: schräge Scans begradigen), OCR_TIMEOUT=900,
+      #           OCR_RETRIES=5, RETRY_DELAY=60, OCR_WORKERS=2
     ports:
       - "445:445/tcp"
     tmpfs:

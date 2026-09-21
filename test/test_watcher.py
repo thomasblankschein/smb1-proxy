@@ -123,6 +123,46 @@ class Case(unittest.TestCase):
     self.assertEqual(watcher.results, {})
     self.assertEqual(watcher.cooldown, {})
 
+  def request_body(self, ocr_type):
+    """Ruft call_ocr mit einem gefälschten HTTP-Client auf und gibt den gesendeten Multipart-Body zurück."""
+    response = mock.MagicMock()
+    response.__enter__.return_value = response
+    response.read.return_value = PDF
+    response.headers.get.return_value = None
+    with mock.patch.object(watcher, 'OCR_TYPE', ocr_type), \
+         mock.patch.object(watcher.urllib.request, 'urlopen', return_value=response) as urlopen:
+      watcher.call_ocr(PDF, 'scan.pdf', '2026-09-21')
+    return urlopen.call_args[0][0].data
+
+  def test_ocr_type_is_sent_to_the_service(self):
+    for ocr_type in ('exact', 'deskew'):
+      body = self.request_body(ocr_type)
+      self.assertIn('name="type"\r\n\r\n{}\r\n'.format(ocr_type).encode(), body)
+      # die übrigen Felder bleiben unverändert
+      for name, value in (('llm', 'true'), ('meta', 'true'), ('lenient', 'true'), ('scan_date', '2026-09-21')):
+        self.assertIn('name="{}"\r\n\r\n{}\r\n'.format(name, value).encode(), body)
+
+  def load_watcher_with(self, **env):
+    """Lädt watcher.py frisch mit anderen Umgebungsvariablen (die Konfiguration wird beim Import gelesen)."""
+    with mock.patch.dict(os.environ, env):
+      mod = importlib.util.module_from_spec(spec)
+      spec.loader.exec_module(mod)
+    return mod
+
+  def test_ocr_type_from_environment(self):
+    self.assertEqual(self.load_watcher_with(OCR_TYPE='deskew').OCR_TYPE, 'deskew')
+    self.assertEqual(self.load_watcher_with(OCR_TYPE=' Deskew ').OCR_TYPE, 'deskew', 'Leerzeichen und Groß-/Kleinschreibung egal')
+    self.assertEqual(self.load_watcher_with(OCR_TYPE='exact').OCR_TYPE, 'exact')
+    self.assertEqual(self.load_watcher_with(OCR_TYPE='').OCR_TYPE, 'exact', 'leer = Standard')
+    with mock.patch.dict(os.environ):
+      os.environ.pop('OCR_TYPE', None)
+      mod = importlib.util.module_from_spec(spec)
+      spec.loader.exec_module(mod)
+    self.assertEqual(mod.OCR_TYPE, 'exact', 'ohne Angabe: exact')
+
+  def test_invalid_ocr_type_falls_back_to_exact(self):
+    self.assertEqual(self.load_watcher_with(OCR_TYPE='sharpen').OCR_TYPE, 'exact')
+
   def test_safe_relpath(self):
     ok = ['Telekom/2026-09-18_Rechnung.pdf', 'Müller & Söhne/x.PDF']
     bad = ['x.pdf', 'a/b/c.pdf', '../x.pdf', 'a/../x.pdf', '/x.pdf', 'a\\b.pdf', '.hidden/x.pdf', 'a/.x.pdf', 'a/b.txt', '', None, 5]

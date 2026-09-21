@@ -71,6 +71,7 @@ check "err500: 2 Versuche (Wiederholung)"                  '[ "$(echo "$LOGS" | 
 check "err400: 1 Versuch (endgültig, keine Wiederholung)"  '[ "$(echo "$LOGS" | grep -c "\"file\": \"err400.pdf\"")" = "1" ]'
 check "Jede erfolgreiche Datei nur 1x an OCR (kein Doppel)" '[ "$(echo "$LOGS" | grep -c "\"file\": \"slow1.pdf\"")" = "1" ]'
 check "Anfrage: llm/meta/lenient/scan_date + API-Key"      'echo "$LOGS" | grep "\"file\": \"ok1.pdf\"" | grep -q "\"llm\": \"true\".*\"meta\": \"true\".*\"lenient\": \"true\"" && echo "$LOGS" | grep "\"file\": \"ok1.pdf\"" | grep -qE "\"scan_date\": \"[0-9]{4}-[0-9]{2}-[0-9]{2}\"" && echo "$LOGS" | grep "\"file\": \"ok1.pdf\"" | grep -q "\"apikey\": \"testkey\""'
+check "Anfrage: OCR_TYPE aus der Konfiguration (deskew)"   'echo "$LOGS" | grep "\"file\": \"ok1.pdf\"" | grep -q "\"type\": \"deskew\""'
 
 echo
 if [ "$fail" = "0" ]; then echo "ALLE TESTS BESTANDEN"; else echo "FEHLER (siehe oben)"; $DC logs smb1proxy | tail -40; fi

@@ -20,6 +20,11 @@ SETTLE_SECONDS = int(os.getenv('SETTLE_SECONDS', '30'))        # so lange muss e
 OCR_URL = os.getenv('OCR_URL', '').strip().rstrip('/')
 OCR_API_KEY = os.getenv('OCR_API_KEY', '')
 OCR_LANG = os.getenv('OCR_LANG', 'de-DE')
+# exact = Originalbild bleibt unverändert; deskew = schräg eingezogene Scans werden begradigt (Bild wird verändert)
+OCR_TYPE = os.getenv('OCR_TYPE', '').strip().lower() or 'exact'
+if OCR_TYPE not in ('exact', 'deskew'):
+  print("OCR_TYPE '{}' ist ungültig (exact | deskew) - verwende exact".format(OCR_TYPE), flush=True)
+  OCR_TYPE = 'exact'
 OCR_TIMEOUT = int(os.getenv('OCR_TIMEOUT', '900'))             # Sekunden je Aufruf (LLM-Läufe dauern Minuten)
 OCR_RETRIES = max(1, int(os.getenv('OCR_RETRIES', '5')))       # Versuche je Datei (5 x 60 s überbrücken ca. 4 Minuten Ausfall)
 OCR_WORKERS = max(1, int(os.getenv('OCR_WORKERS', '2')))       # parallel verarbeitete Dateien
@@ -108,7 +113,7 @@ def multipart(fields, filename, data):
 
 def call_ocr(data, filename, scan_date):
   """Schickt die PDF an den Service. Gibt (pdf_bytes, meta_dict_oder_None) zurück, sonst OcrError."""
-  fields = {'lang': OCR_LANG, 'llm': 'true', 'meta': 'true', 'lenient': 'true', 'scan_date': scan_date}
+  fields = {'lang': OCR_LANG, 'type': OCR_TYPE, 'llm': 'true', 'meta': 'true', 'lenient': 'true', 'scan_date': scan_date}
   body, content_type = multipart(fields, filename, data)
   headers = {'Content-Type': content_type}
   if OCR_API_KEY:
@@ -258,7 +263,7 @@ def forget_stale_results():
 
 
 def main():
-  print('File watcher started' + (' (OCR: {})'.format(OCR_URL) if OCR_URL else ''), flush=True)
+  print('File watcher started' + (' (OCR: {}, Typ: {})'.format(OCR_URL, OCR_TYPE) if OCR_URL else ''), flush=True)
   executor = ThreadPoolExecutor(max_workers=OCR_WORKERS) if OCR_URL else None
 
   while True:

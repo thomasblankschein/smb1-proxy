@@ -94,7 +94,7 @@ docker compose logs --tail 20
 Erwartet:
 
 - OCR-Service: `service gestartet … llm=anthropic/claude-sonnet-5`
-- Proxy: `File watcher started (OCR: http://pdf-adobe-ocr:3000)`
+- Proxy: `File watcher started (OCR: http://pdf-adobe-ocr:3000, Typ: exact)`
 
 Antwortet das NAS beim Start noch nicht, beendet sich der Proxy beim Mounten (bekanntes Verhalten des Entrypoints); `restart: unless-stopped` holt den Start nach.
 
@@ -135,6 +135,7 @@ docker compose up -d
 - **Ausfall des Ziels:** Der Proxy wartet, die Datei bleibt in der Freigabe, und das fertige OCR-Ergebnis wird zwischengespeichert, sodass nach der Rückkehr des Ziels nicht erneut (kostenpflichtig) verarbeitet wird.
 - **Datenschutz:** Jede eingescannte PDF geht an Adobe und, mit `LLM_PROVIDER`, an Anthropic. Ohne `OCR_URL` bleibt alles lokal.
 - **Große Dokumente:** Über 50 Seiten gibt es nur Adobe-OCR (ohne LLM-Korrektur); änderbar mit `LLM_MAX_PAGES` in `.env.ocr`.
+- **Schräge Scans:** Standard ist `OCR_TYPE=exact` (Originalbild bleibt unverändert). Werden Seiten schief eingezogen, kann `OCR_TYPE: deskew` beim `smb1proxy` unter `environment` die Seiten begradigen; das Bild wird dabei verändert. Danach `docker compose up -d`. Im Log steht der aktive Typ in der Startzeile.
 - **Formate:** JPEG und TIFF laufen unverändert durch wie bisher; nur PDFs werden per OCR verarbeitet. Eine PDF gilt als **ein** Dokument, mehrere Briefe in einer Datei werden nicht getrennt.
 - **Sehr schlechte Scans** (stark verblasst): Bei unbrauchbarer Adobe-Textebene transkribiert das Modell die Seite selbst, schreibt aber nur sichere Zeilen. Unleserliche Seiten bekommen keinen Text und landen in `_Pruefen`.
 - **Sicherheit:** Der OCR-Service wird nicht nach außen veröffentlicht und ist zusätzlich per `API_KEY` geschützt. SMB1 sollte weiterhin nur im Scanner-Netz erreichbar sein.
