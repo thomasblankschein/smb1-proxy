@@ -4,7 +4,7 @@ Anleitung, den smb1-proxy zusammen mit dem [pdf-adobe-ocr](https://github.com/th
 
 ```
 Scanner --SMB1--> smb1proxy --HTTP--> pdf-adobe-ocr (Adobe OCR + LLM)
-                     \--SMB2--> Zielverzeichnis  (<Korrespondent>/<Datum>_<Korrespondent>_<Inhalt>.pdf)
+                     \--SMB2--> Zielverzeichnis  (<Korrespondent>/<Datum>_<Korrespondent>_<Inhalt>[_<Bezug>].pdf)
 ```
 
 Die Reihenfolge ist so gewählt, dass jederzeit ein Rückweg auf das alte Verhalten besteht (siehe [Rückweg](#6-rückweg)).
@@ -106,13 +106,13 @@ Einen **harmlosen** Scan (keine sensiblen Daten) vom Scanner abschicken, denn da
 docker compose logs -f smb1proxy
 ```
 
-Zeitverlauf: etwa 30 s Wartezeit, bis die Datei als fertig gilt, dann 20 bis 30 s OCR. Nach rund einer Minute steht `Abgelegt: … -> …/<Korrespondent>/<Datum>_<Korrespondent>_<Inhalt>.pdf` im Log, und die Datei liegt im Zielverzeichnis. Im PDF-Viewer prüfen, ob die Suche Text findet.
+Zeitverlauf: etwa 30 s Wartezeit, bis die Datei als fertig gilt, dann 20 bis 30 s OCR. Nach rund einer Minute steht `Abgelegt: … -> …/<Korrespondent>/<Datum>_<Korrespondent>_<Inhalt>[_<Bezug>].pdf` im Log, und die Datei liegt im Zielverzeichnis. Im PDF-Viewer prüfen, ob die Suche Text findet.
 
 ## 5. Was die Ergebnisse bedeuten
 
 | Ergebnis im Ziel | Bedeutung | Was tun |
 |---|---|---|
-| `<Korrespondent>/<Datum>_<Korrespondent>_<Inhalt>.pdf` | normal | nichts |
+| `<Korrespondent>/<Datum>_<Korrespondent>_<Inhalt>[_<Bezug>].pdf` | normal | nichts |
 | `_Unbekannt/…` | Absender nicht erkannt | bei Bedarf von Hand einsortieren |
 | `_Pruefen/…` | Modell war unsicher oder die Seite kaum lesbar (Datum ist dann das Scandatum) | Name und Datum prüfen |
 | `<Zeitstempel>_Fehler.pdf` im Zielordner | OCR endgültig gescheitert; es ist das Original ohne OCR | Ursache im Log suchen, Datei später von Hand erneut einliefern |
