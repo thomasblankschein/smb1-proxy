@@ -123,10 +123,13 @@ def call_ocr(data, filename, scan_date):
     with urllib.request.urlopen(request, timeout=OCR_TIMEOUT) as response:
       pdf = response.read()
       meta_header = response.headers.get('X-OCR-Meta')
+      # Engine (adobe/tesseract, bei Kontingent-Ausweichen mit Vermerk) und LLM-Ergebnis für das Log
       llm_info = ', '.join('{}={}'.format(key, value) for key, value in (
-        (name, response.headers.get('X-OCR-LLM' + suffix)) for name, suffix in (
-          ('Modell', ''), ('Seiten', '-Pages'), ('Korrekturen', '-Corrections'), ('fehlgeschlagen', '-Failed'),
-          ('transkribiert', '-Transcribed'), ('uebersprungen', '-Skipped'))) if isinstance(value, str) and value)
+        (name, response.headers.get(header)) for name, header in (
+          ('Engine', 'X-OCR-Engine'), ('Ausweichen', 'X-OCR-Engine-Fallback'),
+          ('Modell', 'X-OCR-LLM'), ('Seiten', 'X-OCR-LLM-Pages'), ('Korrekturen', 'X-OCR-LLM-Corrections'),
+          ('fehlgeschlagen', 'X-OCR-LLM-Failed'), ('transkribiert', 'X-OCR-LLM-Transcribed'),
+          ('uebersprungen', 'X-OCR-LLM-Skipped'))) if isinstance(value, str) and value)
   except urllib.error.HTTPError as err:
     detail = err.read(300).decode('utf-8', 'replace')
     # 4xx (außer Zeitüberschreitung/Ratenlimit) sind endgültig: Wiederholen ändert nichts
@@ -135,7 +138,7 @@ def call_ocr(data, filename, scan_date):
     raise OcrError("nicht erreichbar/Zeitüberschreitung: {}".format(err), True)
   if not pdf.startswith(b'%PDF'):
     raise OcrError("Antwort ist keine PDF", True)
-  log("OCR-Antwort für {}: LLM {}".format(filename, llm_info or 'nicht angewendet'))
+  log("OCR-Antwort für {}: {}".format(filename, llm_info or 'keine Angaben'))
   meta = None
   if meta_header:
     try:

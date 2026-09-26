@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.5] - 2026-09-26
+### Added
+- The log line per file (`OCR-Antwort für …`) now shows the OCR engine of the service (`Engine=adobe|tesseract`) and, if Adobe's quota was exhausted and the service fell back to Tesseract, `Ausweichen=adobe-quota` (needs OCR service v2.5.0; older services simply omit it)
+### Changed
+- Documentation: `OCR_TYPE=deskew` also works with the service's new Tesseract engine (`OCR_ENGINE=tesseract`, or `OCR_FALLBACK=tesseract` for exhausted Adobe quota)
+
 ## [0.5.4] - 2026-09-21
 ### Changed
 - Documentation follows the OCR service's optional reference in the file name (`<correspondent>/<date>_<correspondent>_<content>[_<reference>].pdf`, e.g. contract, policy or deposit number, licence plate; service v2.4.0). The proxy itself takes the path from the service unchanged
